@@ -1,29 +1,26 @@
 package task.usersDAO;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import task.users.User;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 @Component
-public class UserDAO  {
-    final private String fileName = "jsonData.txt";
+@Scope("prototype")
+public class UserDAO {
+    final private static String FILE_NAME = "jsonData.json";
 
-    public void save(User user)throws Exception{
-        File file = new File(fileName);
-        FileWriter fileWriter = new FileWriter(fileName);
-        if(file.exists()) {
-            if(file.length()==0){
+    public void save(User user) throws Exception {
+        File file = new File(FILE_NAME);
+        FileWriter fileWriter = new FileWriter(FILE_NAME);
+        if (file.exists()) {
+            if (file.length() == 0) {
                 fileWriter.write("[" + user.toString() + "]");
-            }
-            else fileWriter.write("\b" + "," + user.toString() + "]");
+            } else fileWriter.write("\b" + "," + user.toString() + "]");
         }
         fileWriter.close();
     }
@@ -32,11 +29,11 @@ public class UserDAO  {
         return new String(Files.readAllBytes(Paths.get(fileName)));
     }
 
-    public boolean check(User user)throws Exception{
-        String str = readUsingFiles(fileName);
-        boolean tf=false;
-        if(str.contains("{\"email\":\"" + user.getEmail()+"\",\"password\":\""+user.getPassword()+"\"}")){
-            tf=true;
+    public boolean check(User user) throws Exception {
+        String str = readUsingFiles(FILE_NAME);
+        boolean tf = false;
+        if (str.contains("{\"email\":\"" + user.getEmail() + "\",\"password\":\"" + user.getPassword() + "\"}")) {
+            tf = true;
         }
         return tf;
     }
